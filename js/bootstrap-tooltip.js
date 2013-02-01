@@ -75,7 +75,7 @@
 		  $tip
 			  .detach()
 			  .css({ top: 0, left: 0, display: 'block' })
-			  .insertAfter($el);
+		  	  .appendTo(this.options.inside ? $el : document.body)
 
 		  elOffest = $el.offset();
 		  tipSize = { width: $tip.width(), height: $tip.height() };
@@ -170,7 +170,7 @@
         $tip
           .detach()
           .css({ top: 0, left: 0, display: 'block' })
-          .insertAfter(this.$element)
+		  .appendTo(this.options.inside ? this.$element : document.body)
 
         pos = this.getPosition(inside)
 
@@ -322,6 +322,7 @@
   , title: ''
   , delay: 0
   , html: false
+  , inside: false	// default behaviour prior to 2.2.2; the full feature will be added in 2.3.0, see https://github.com/twitter/bootstrap/pull/6321
   }
 
 
