@@ -56,7 +56,56 @@
       this.options.selector ?
         (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
         this.fixTitle()
+
+	  if (this.options.autoPlacement) {
+		this.options.origPlacement = this.options.placement
+		this.options.placement = this.autoPlacement
+	  }
     }
+
+  , autoPlacement: function () {
+		  var pos = typeof this.options.origPlacement == 'function' ? 'top' : this.options.origPlacement,
+			  $el = this.$element,
+			  $tip = this.$tip,
+			  elOffest,
+			  tipSize,
+			  correction;
+
+		  // have to render tooltip for calculations
+		  $tip
+			  .detach()
+			  .css({ top: 0, left: 0, display: 'block' })
+			  .insertAfter($el);
+
+		  elOffest = $el.offset();
+		  tipSize = { width: $tip.width(), height: $tip.height() };
+
+		  if ( 'right' === pos || 'left' === pos ) {
+
+			  if ( elOffest.left + $el.width() + tipSize.width > $(window).width() ) {
+				  correction = 'left'
+			  }
+
+			  if ( elOffest.left - tipSize.width < 0 ) {
+				  correction = 'right'
+			  }
+
+		  }
+
+		  if ( 'top' === pos || 'bottom' === pos ) {
+
+			  if ( elOffest.top - tipSize.height < 0 ) {
+				  correction = 'bottom'
+			  }
+
+			  if ( elOffest.top + $el.height() + tipSize.height > $(window).height() ) {
+				  correction = 'top'
+			  }
+
+		  }
+
+		  return correction || pos
+	  }
 
   , getOptions: function (options) {
       options = $.extend({}, $.fn[this.type].defaults, options, this.$element.data())
